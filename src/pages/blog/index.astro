@@ -1,0 +1,62 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog"))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title="Blog — Jone9" description="Posts and notes">
+  <section class="card">
+    <h1 style="margin-top:0;">Blog</h1>
+    <p class="muted">Notes, projects, and things I’m learning.</p>
+  </section>
+
+  <div class="postList">
+  {posts.map((post) => (
+    <article class="postCard">
+      <div class="postMeta">
+        <time class="muted">{post.data.date.toLocaleDateString()}</time>
+        {post.data.tags?.length ? <span class="muted"> · {post.data.tags.join(" · ")}</span> : null}
+      </div>
+
+      {/* ✅ Title is NOT a link */}
+      <h2 class="postTitle">{post.data.title}</h2>
+
+      {/* ✅ Preview */}
+      <p class="postPreview">
+        {post.data.excerpt ?? post.data.description ?? "No preview available yet."}
+      </p>
+
+      {/* ✅ Only this is clickable */}
+      <div class="postActions">
+        <a class="readMore" href={`/blog/${post.slug}/`}>Read more →</a>
+      </div>
+    </article>
+  ))}
+</div>
+
+<style>
+  .postList { margin-top: 18px; display: grid; gap: 14px; }
+  .postCard {
+    border: 1px solid rgba(127,127,127,.25);
+    border-radius: 16px;
+    padding: 16px;
+    background: rgba(127,127,127,.06);
+  }
+  .postMeta { font-size: 14px; margin-bottom: 8px; }
+  .postTitle { margin: 0 0 8px 0; }
+  .postPreview { margin: 0; opacity: .85; }
+  .postActions { margin-top: 12px; }
+  .readMore {
+    display: inline-block;
+    padding: 8px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(127,127,127,.35);
+    background: rgba(127,127,127,.12);
+    font-size: 14px;
+  }
+  .readMore:hover { background: rgba(127,127,127,.20); }
+</style>
+</BaseLayout>

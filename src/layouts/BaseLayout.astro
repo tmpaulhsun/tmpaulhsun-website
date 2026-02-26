@@ -1,0 +1,59 @@
+---
+const { title = "My Site", description = "Personal website & blog" } = Astro.props;
+const pathname = Astro.url.pathname;
+
+const nav = [
+  { href: "/", label: "Home" },
+  { href: "/blog", label: "Blog" },
+  { href: "/about", label: "About" },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <style>
+      :root { color-scheme: light dark; }
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; line-height: 1.6; }
+      a { text-decoration: none; }
+      .container { max-width: 980px; margin: 0 auto; padding: 24px; }
+      header { position: sticky; top: 0; backdrop-filter: blur(10px); border-bottom: 1px solid rgba(127,127,127,.25); }
+      nav { display: flex; gap: 14px; align-items: center; justify-content: space-between; }
+      .links { display: flex; gap: 12px; }
+      .links a { padding: 8px 10px; border-radius: 10px; }
+      .links a[aria-current="page"] { background: rgba(127,127,127,.18); }
+      main { padding-top: 18px; }
+      .card { border: 1px solid rgba(127,127,127,.25); border-radius: 16px; padding: 16px; }
+      footer { margin-top: 36px; opacity: .8; font-size: 14px; }
+      .muted { opacity: .75; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <nav>
+          <div><strong>tmpaulhsun</strong> <span class="muted">/ blog</span></div>
+          <div class="links">
+            {nav.map((item) => (
+              <a href={item.href} aria-current={pathname === item.href ? "page" : undefined}>
+                {item.label}
+              </a>
+            ))}
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <slot />
+    </main>
+
+    <footer class="container">
+      <div>© {new Date().getFullYear()} Jone9 · Built with Astro</div>
+    </footer>
+  </body>
+</html>
